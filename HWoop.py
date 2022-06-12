@@ -18,37 +18,37 @@ class Student:
                 lecturer.grades[course] = [grade]
         else:
             return 'Ошибка'
-
+    def average_grade_of_student(self):
+        grades = self.grades
+        list_curses = []
+        for courses in grades:
+            list_curses.append(courses)
+        print(f'Имеющиеся курсы: {list_curses}')
+        course_name = input(
+            f'''\nВведите название курса для просмотра средней оценки по этому курсу или введите "Все" для просмотра средней оценки по всем курсам: ''')
+        if course_name != 'Все':
+            list_grades = grades.get(course_name)
+            sum_grade = 0
+            for grade in list_grades:
+                sum_grade += grade
+            average = sum_grade / len(list_grades)
+            return round(average, 1)
+        else:
+            all_grades = []
+            for count in grades:
+                all_grades += grades.get(count)
+            sum_grade = 0
+            for grade in all_grades:
+                sum_grade += grade
+            average = sum_grade / len(all_grades)
+            return round(average, 1)
     def __str__(self):
-        def average_grade_of_students():
-            grades = self.grades
-            list_curses = []
-            for courses in grades:
-                list_curses.append(courses)
-            print(f'Имеющиеся курсы: {list_curses}')
-            course_name = input(f'''\nВведите название курса для просмотра средней оценки по этому курсу или введите "Все" для просмотра средней оценки по всем курсам: ''')
-            if course_name != 'Все':
-                list_grades = grades.get(course_name)
-                sum_grade = 0
-                for grade in list_grades:
-                    sum_grade += grade
-                average = sum_grade / len(list_grades)
-                return round(average, 1)
-            else:
-                all_grades = []
-                for count in grades:
-                    all_grades += grades.get(count)
-                sum_grade = 0
-                for grade in all_grades:
-                    sum_grade += grade
-                average = sum_grade / len(all_grades)
-                return round(average, 1)
 
         courses = self.courses_in_progress
         finish = self.finished_courses
         return f"""\nИмя: {self.name}
 Фамилия: {self.surname}
-Средняя оценка за домашние задания: {average_grade_of_students()}
+Средняя оценка за домашние задания: {self.average_grade_of_student()}
 Курсы в процессе изучения: {",".join(courses)}
 Заверсенные курсы: {",".join(finish)}"""
 
@@ -56,7 +56,7 @@ class Student:
         if not isinstance(other, Student):
             print('Можно сравнивать только Студентов!')
             return
-        elif self.average_grade_of_students > other.average_grade_of_students:
+        elif self.average_grade_of_students() > other.average_grade_of_students():
             return print(
                 f'\n{self.name} {self.surname} имеет среднюю оценку за домашние задания выше чем {other.name} {other.surname}')
         else:
@@ -80,45 +80,44 @@ class Lecturer(Mentor):
 
     def average_grade_of_lecturer(self):
         grades = self.grades
-        # list_curses = []
-        # for courses in grades:
-        #     list_curses.append(courses)
-        # print(f'Имеющиеся курсы: {list_curses}')
-        # course_name = input(
-        #     f'''\nВведите название курса для просмотра средней оценки по этому курсу или введите "Все" для просмотра средней оценки по всем курсам: ''')
-        # if course_name != 'Все':
-        #     list_grades = grades.get(course_name)
-        #     sum_grade = 0
-        #     for grade in list_grades:
-        #         sum_grade += grade
-        #     average = sum_grade / len(list_grades)
-        #     return round(average, 1)
-        # else:
-        all_grades = []
-        for count in grades:
-            all_grades += grades.get(count)
-        sum_grade = 0
-        for grade in all_grades:
-            sum_grade += grade
-        average = sum_grade / len(all_grades)
-        return round(average, 1)
+        list_curses = []
+        for courses in grades:
+            list_curses.append(courses)
+        print(f'Имеющиеся курсы: {list_curses}')
+        course_name = input(
+            f'''\nВведите название курса для просмотра средней оценки по этому курсу или введите "Все" для просмотра средней оценки по всем курсам: ''')
+        if course_name != 'Все':
+            list_grades = grades.get(course_name)
+            sum_grade = 0
+            for grade in list_grades:
+                sum_grade += grade
+            average = sum_grade / len(list_grades)
+            return round(average, 1)
+        else:
+            all_grades = []
+            for count in grades:
+                all_grades += grades.get(count)
+            sum_grade = 0
+            for grade in all_grades:
+                sum_grade += grade
+            average = sum_grade / len(all_grades)
+            return round(average, 1)
 
     def __str__(self):
 
         return f"""\nИмя: {self.name}
 Фамилия: {self.surname}
-Средняя оценка за лекции: {self.average_grade_of_lecturer}"""
+Средняя оценка за лекции: {self.average_grade_of_lecturer()}"""
 
     def __lt__(self, other):
 
         if not isinstance(other, Lecturer):
             print('Можно сравнивать только Лекторов!')
             return
-        elif self.average_grade_of_lecturer > other.average_grade_of_lecturer:
-            return print(
-                f'\n{self.name} {self.surname} имеет среднюю оценку за лекции выше чем {other.name} {other.surname}')
+        elif self.average_grade_of_lecturer() > other.average_grade_of_lecturer():
+            return f'\n{self.name} {self.surname} имеет среднюю оценку за лекции выше чем {other.name} {other.surname}'
         else:
-            return print(f'\n{other.name} {other.surname} имеет среднюю оценку за лекции выше чем {self.name} {self.surname}')
+            return f'\n{other.name} {other.surname} имеет среднюю оценку за лекции выше чем {self.name} {self.surname}'
 
 class Reviewer(Mentor):
     def rate_hw(self, student, lecturer, course, grade):
@@ -135,10 +134,12 @@ class Reviewer(Mentor):
 Фамилия: {self.surname}"""
 
 
+
+
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
 
-good_student = Student('Han', 'Solo', 'male')
+good_student = Student('Luke', 'Skywalker', 'male')
 good_student.courses_in_progress += ['Python']
 
 cool_mentor = Mentor('Some', 'Buddy')
@@ -174,6 +175,29 @@ fair_reviewer.rate_hw(good_student, smart_lecturer, 'Python', 10)
 fair_reviewer.rate_hw(good_student, smart_lecturer, 'Python', 10)
 fair_reviewer.rate_hw(good_student, smart_lecturer, 'Python', 9)
 
+
+
+def course_average_grade_prsns(prsn_list, course_name):
+    course_grade_list = []
+
+    for prsn in prsn_list:
+        if course_name in prsn.grades:
+            course_grade_list += prsn.grades.get(course_name)
+
+    sum_of_grades = 0
+    for grade in course_grade_list:
+        sum_of_grades += grade
+    average = sum_of_grades / len(course_grade_list)
+
+    return round(average, 1)
+
+
+list_of_students = [best_student, good_student]
+list_of_lecturers = [cool_lecturer, smart_lecturer]
+
+
+# print(course_average_grade_prsns(list_of_students,"Python"))
+print(course_average_grade_prsns(list_of_lecturers,"Python"))
 # print(cool_lecturer > smart_lecturer)
 # print(best_student > good_student)
 # print(best_student)
